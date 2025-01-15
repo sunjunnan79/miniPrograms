@@ -1,0 +1,85 @@
+definitions:
+  api.CheckStatusResp:
+    properties:
+      status:
+        type: boolean
+    type: object
+  api.Resp:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  api.SetStatusReq:
+    properties:
+      password:
+        type: string
+      programs_name:
+        type: string
+      status:
+        type: boolean
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /checkStatus:
+    post:
+      consumes:
+      - application/json
+      description: 根据项目名称检查该项目的状态
+      parameters:
+      - description: 项目名称
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Resp'
+            - properties:
+                data:
+                  $ref: '#/definitions/api.CheckStatusResp'
+              type: object
+        "400":
+          description: 错误响应
+          schema:
+            $ref: '#/definitions/api.Resp'
+      summary: 检查项目状态
+  /setStatus:
+    put:
+      consumes:
+      - application/json
+      description: 根据项目名称和状态更新该项目的状态
+      parameters:
+      - description: 项目状态更新请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.SetStatusReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功响应
+          schema:
+            $ref: '#/definitions/api.Resp'
+        "400":
+          description: 认证失败或其他错误
+          schema:
+            $ref: '#/definitions/api.Resp'
+        "500":
+          description: 保存失败
+          schema:
+            $ref: '#/definitions/api.Resp'
+      summary: 设置项目状态
+swagger: "2.0"
